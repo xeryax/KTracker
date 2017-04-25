@@ -149,14 +149,6 @@ an extended period of time since the last pup.
    sequence="100"
   >
   </alias>
-  <alias
-   script="pup_reportc"
-   match="^kt crepo?r?t? ?(?<chan>[\w ]+)?$"
-   enabled="y"
-   regexp="y"
-   sequence="100"
-  >
-  </alias>
 
   <alias
    script="set_avg"
@@ -494,12 +486,10 @@ function pup_report(name, line, args)
 				if pup_days[i]["max_gold"] or 0  > maxgold then
 					maxgold = pup_days[i]["max_gold"]
 				end
-				ColourNote("teal", "", " [", "silver", "", pup_days[i]["day"], "teal", "", "]", "teal", "", "  Pups ", "silver", "", pup_days[i]["total"], "teal", "", "  Gold ", "silver", "", commas(pup_days[i]["gold"] or 0 ), "teal", "", "  Kills ", "silver", "", commas(pup_days[i]["kills"] or 0), "teal", "", "  Deathblows ", "silver", "", commas(pup_days[i]["deathblow"] or 0), "teal", "", "  Vorpals ", "silver", "", commas(pup_days[i]["vorpal"] or 0))
-				ColourTell("teal", "", "               Avg pup ", "silver", "", string.format("%.1f", (pup_days[i]["seconds"] - pup_days[i]["slowest"])/(pup_days[i]["total"] - 1)).. " sec", "teal", "", "  Fastest pup ", "silver", "", pup_days[i]["fastest"] or 0 .. " sec")
-				ColourNote("teal", "", "  Avg gold/pup ", "silver", "", commas(math.floor(pup_days[i]["gold"] / pup_days[i]["total"])), "teal", "", "  Max gold/pup ", "silver", "", commas(pup_days[i]["max_gold"] or 0 ).."\n")
+				SendNoEcho(pchann.." "..accentcolor.."["..numcolor..pup_days[i]["day"]..accentcolor.."]"..pupcolor.." Pups "..numcolor..pup_days[i]["total"]..pupcolor.."  Gold "..numcolor..commas(pup_days[i]["gold"] or 0 )..pupcolor.."  Kills "..numcolor..commas(pup_days[i]["kills"] or 0)..pupcolor.."  Deathblows "..numcolor..commas(pup_days[i]["deathblow"] or 0)..pupcolor.."  Vorpals "..numcolor..commas(pup_days[i]["vorpal"] or 0))
+				SendNoEcho(pchann.." "..pupcolor.."            Avg pup "..numcolor..string.format("%.1f", (pup_days[i]["seconds"] - pup_days[i]["slowest"])/(pup_days[i]["total"] - 1)).. pupcolor.." sec  Fastest pup "..numcolor..(pup_days[i]["fastest"] or 0) .. pupcolor.." sec  Avg gold/pup "..numcolor..commas(math.floor(pup_days[i]["gold"] / pup_days[i]["total"]))..pupcolor.."  Max gold/pup "..numcolor.. commas(pup_days[i]["max_gold"] or 0 ))
 			end
-			ColourNote("teal", "", "  Total pups ", "silver", "", total, "teal", "", "  Avg pups/day ", "silver", "", string.format("%.1f", total/days), "teal", "", "  Avg pup ", "silver", "", string.format("%.1f", (secs - slow_secs)/(total - days)).." sec", "teal", "", "  Fastest pup ", "silver", "", fast.." sec")
-			ColourNote("teal", "", "  Total gold ", "silver", "", commas(totalgold), "teal", "", "  Avg gold/day ", "silver", "", commas(math.floor(totalgold/days)), "teal", "", "  Avg gold/pup ", "silver", "", commas(math.floor(totalgold/total)).."\n")
+			SendNoEcho(pchann.." "..pupcolor.."Total pups "..numcolor.. total..pupcolor.."  Avg pups/day "..numcolor..string.format("%.1f", total/days)..pupcolor.."  Avg pup "..numcolor.. string.format("%.1f", (secs - slow_secs)/(total - days))..pupcolor.." sec Fastest pup "..numcolor..fast..pupcolor.." sec"..pupcolor.."  Total gold "..numcolor..commas(totalgold)..pupcolor.."  Avg gold/day "..numcolor..commas(math.floor(totalgold/days))..pupcolor.."  Avg gold/pup "..numcolor.. commas(math.floor(totalgold/total)).."$C")
 		else
 			ColourNote("teal", "", "  Report requested "..days.." days, but only "..#pup_days.." days worth of pups have been saved.")
 		end
@@ -508,48 +498,6 @@ function pup_report(name, line, args)
 	end
 end
 
-function pup_reportc(name, line, args)
-	local chan = args.chan
-	local days = 1
-	local total = 0
-	local totalgold = 0
-	local maxgold = 0
-	local fast = 60 * 60 * 24 * pup_days_max
-	local slow = 0
-	local slow_secs = 0
-	local secs = 0
-	if tonumber(#pup_days) > 0 then
-		if days <= #pup_days then
-			local suff = ""
-			if days > 1 then
-				suff = "s"
-			end
-			
-			for i = #pup_days - days + 1, #pup_days do
-				total = total + pup_days[i]["total"]
-				totalgold = totalgold + pup_days[i]["gold"]
-				secs = secs + pup_days[i]["seconds"]
-				slow_secs = slow_secs + pup_days[i]["slowest"]
-				if pup_days[i]["fastest"] or 0 < fast then
-					fast = pup_days[i]["fastest"]
-				end
-				if pup_days[i]["slowest"] or 0  > slow then
-					slow = pup_days[i]["slowest"]
-				end
-				if pup_days[i]["max_gold"] or 0  > maxgold then
-					maxgold = pup_days[i]["max_gold"]
-				end
-				SendNoEcho(chan.." "..accentcolor.."["..pupcolor.."Pups "..numcolor..pup_days[i]["total"]..accentcolor.."] ["..pupcolor.."Gold "..numcolor..commas(pup_days[i]["gold"])..accentcolor.."] ["..pupcolor.."Kills "..numcolor..commas(pup_days[i]["kills"] or 0).. accentcolor.."] ["..pupcolor.."Deathblows "..numcolor..commas(pup_days[i]["deathblow"] or 0)..accentcolor.."] ["..pupcolor.."Vorpals "..numcolor..commas(pup_days[i]["vorpal"] or 0).. accentcolor.."] ["..pupcolor.."Avg Pup "..numcolor..string.format("%.1f", (pup_days[i]["seconds"] - pup_days[i]["slowest"])/(pup_days[i]["total"] - 1))..pupcolor.. " sec".. accentcolor.."] ["..pupcolor.."Fastest Pup " ..numcolor..(pup_days[i]["fastest"] or 0).." sec "..accentcolor.."] ["..pupcolor.."Avg Gold/Pup "..numcolor..commas(math.floor(pup_days[i]["gold"] / pup_days[i]["total"])).. accentcolor.."] ["..pupcolor.."Max Gold/Pup "..numcolor..commas(pup_days[i]["max_gold"] or 0 ).. ""..accentcolor.."]")
-				
-			end
-			
-		else
-			ColourNote("teal", "", "  No Data available for the last day.")
-		end
-	else
-		Note("  No pup data!")
-	end
-end
 
 function gold_report(name, line, args)
 	local chan = args.chan
