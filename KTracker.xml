@@ -33,9 +33,9 @@ an extended period of time since the last pup.
 
   kt numcolor <@x>     Set numbers color.
                          - standard mud colorcodes
-						 
+       
   kt accentcolor <@x>  Set brackets color.
-                         - standard mud colorcodes						 
+                         - standard mud colorcodes       
 
   kt comm              Toggles commlog kt output.
   
@@ -44,9 +44,9 @@ an extended period of time since the last pup.
 
   kt window            Toggles window kt output.
   
-  kt avg <#>           Total for rolling average kt time.
+  kt avg <#>           Total for rolling average pup time.
   
-  kt avg 0             Turns off display of average kt time.
+  kt avg 0             Turns off display of average pup time.
   
   kt display           Toggle kt display between new and old style.
   
@@ -60,15 +60,13 @@ an extended period of time since the last pup.
 
   kt rep[ort] <#>      Show kt report for # of days.
 
-  kt crep[ort] <chan>  Show kt report for 1 of days and send to Channel.
-  
   grep[ort] <chan>      Show today's gold report.  Channel optional.
 
   igrep[ort] <chan>     Show gold report since last clear.  Channel optional.
 
   igrep[ort] clear      Clear out the interval gold report data.
   
-  kt info
+  kt info				Displays the options stored as variables
 
 ------------------------------------------------------------------------------
  
